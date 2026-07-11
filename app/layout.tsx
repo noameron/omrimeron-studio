@@ -20,7 +20,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
-        <SiteHeader title={settings.title} nav={nav} />
+        <SiteHeader title={settings.title} nav={nav} social={settings.social} />
         <main>{children}</main>
       </body>
     </html>

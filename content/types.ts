@@ -13,6 +13,11 @@ export interface NavigationItem {
   pageId: string
 }
 
+export interface SocialLink {
+  platform: 'facebook' | 'twitter' | 'linkedin' | 'instagram'
+  url: string
+}
+
 export interface SiteSettings {
   _type: 'siteSettings'
   title: string
@@ -23,6 +28,7 @@ export interface SiteSettings {
     email: string
     mapEmbedUrl: string
   }
+  social: SocialLink[]
   navigation: NavigationItem[]
 }
 

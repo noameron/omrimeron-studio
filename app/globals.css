@@ -93,8 +93,32 @@ main {
   text-underline-offset: 4px;
 }
 
-.site-copyright {
+.site-footer {
   margin-top: auto;
+  display: grid;
+  gap: 1.1rem;
+}
+
+.site-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.site-social a {
+  color: #222;
+}
+
+.site-social a:hover {
+  color: var(--accent);
+}
+
+.site-social svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.site-copyright {
   font-size: 0.7rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -123,7 +147,7 @@ main {
     width: 100px;
   }
 
-  .site-copyright {
+  .site-footer {
     display: none;
   }
 

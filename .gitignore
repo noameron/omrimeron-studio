@@ -59,3 +59,6 @@ next-env.d.ts
 # speckit planning artifacts (local only)
 /.specify/
 /specs/
+
+# agent instructions (local only)
+/CLAUDE.md
