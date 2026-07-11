@@ -54,27 +54,12 @@ main {
 }
 
 .site-logo {
-  display: flex;
-  align-items: center;
-  gap: 0.9rem;
-}
-
-.site-logo__mark {
-  /* CSS-only placeholder for the studio logo mark: no logo binary migrated */
-  flex: none;
-  width: 74px;
-  height: 64px;
-  background: var(--accent);
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 38% 100%, 38% 55%, 0 55%);
-}
-
-.site-logo__word {
   display: block;
-  font-size: 1.45rem;
-  font-weight: 700;
-  line-height: 1.1;
-  text-transform: lowercase;
-  color: #7d7d7d;
+}
+
+.site-logo img {
+  width: 170px;
+  height: auto;
 }
 
 .nav-toggle {
@@ -134,15 +119,8 @@ main {
     border-bottom: 1px solid var(--line);
   }
 
-  .site-logo__mark {
-    width: 34px;
-    height: 30px;
-  }
-
-  .site-logo__word {
-    display: inline-block;
-    font-size: 1.05rem;
-    margin-right: 0.3rem;
+  .site-logo img {
+    width: 100px;
   }
 
   .site-copyright {

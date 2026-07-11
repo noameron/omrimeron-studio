@@ -80,7 +80,7 @@ Rename one tab in `content/site.ts` (e.g. "Food" → "Food!"), reload: the heade
 find . -path ./node_modules -prune -o -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.gif' -o -iname '*.webp' \) -print
 ```
 
-Must print nothing (a favicon SVG/ICO created for the new site is acceptable; zero files from the source site).
+Must print nothing except owner-provided brand assets under `public/brand/` (a favicon is likewise acceptable; zero files from the source site backup).
 
 ### 7. Mobile (FR-009, SC-005)
 

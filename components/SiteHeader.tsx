@@ -1,29 +1,23 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
 import type { ResolvedNavItem } from '@/lib/content'
 
-// Left sidebar matching the source composition: logo lockup on top (green
-// placeholder mark + stacked lowercase title words; no logo binary migrated,
-// FR-003), vertical nav with green active state, copyright at the bottom.
-// Collapses to a top bar with a hamburger menu on small viewports.
+// Left sidebar matching the source composition: studio logo on top
+// (owner-provided asset in public/brand/), vertical nav with green active
+// state, copyright at the bottom. Collapses to a top bar with a hamburger
+// menu on small viewports.
 export default function SiteHeader({ title, nav }: { title: string; nav: ResolvedNavItem[] }) {
   const [open, setOpen] = useState(false)
   const pathname = usePathname()
   const current = pathname ? decodeURIComponent(pathname) : ''
   return (
     <header className="site-sidebar">
-      <Link href="/" className="site-logo" aria-label={title}>
-        <span className="site-logo__mark" aria-hidden="true" />
-        <span className="site-logo__text" aria-hidden="true">
-          {title.split(' ').map((word) => (
-            <span key={word} className="site-logo__word">
-              {word}
-            </span>
-          ))}
-        </span>
+      <Link href="/" className="site-logo">
+        <Image src="/brand/logo.jpg" alt={title} width={181} height={82} priority />
       </Link>
       <button
         type="button"
