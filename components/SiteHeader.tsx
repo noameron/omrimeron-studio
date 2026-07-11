@@ -54,7 +54,11 @@ export default function SiteHeader({
         aria-label="Toggle navigation"
         onClick={() => setOpen((o) => !o)}
       >
-        <span aria-hidden="true">☰</span>
+        <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true">
+          <circle cx="12" cy="5" r="2" />
+          <circle cx="12" cy="12" r="2" />
+          <circle cx="12" cy="19" r="2" />
+        </svg>
       </button>
       <nav className={open ? 'site-nav site-nav--open' : 'site-nav'} aria-label="Main">
         <ul>

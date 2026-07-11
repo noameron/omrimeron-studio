@@ -64,12 +64,16 @@ main {
 
 .nav-toggle {
   display: none;
-  font-size: 1.5rem;
-  line-height: 1;
+  line-height: 0;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem;
+  color: var(--ink);
+}
+
+.nav-toggle svg {
+  fill: currentColor;
 }
 
 .site-nav ul {
@@ -156,19 +160,33 @@ main {
     margin-left: auto;
   }
 
+  /* Off-canvas drawer: slides in from the right, white, links centered */
   .site-nav {
-    display: none;
-    position: absolute;
+    position: fixed;
     top: var(--header-h);
-    left: 0;
     right: 0;
+    bottom: 0;
+    width: min(80vw, 320px);
     background: #fff;
-    border-bottom: 1px solid var(--line);
-    padding: 1rem 1.25rem;
+    border-left: 1px solid var(--line);
+    padding: 2.5rem 1.25rem;
+    overflow-y: auto;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition:
+      transform 0.3s ease,
+      visibility 0.3s;
   }
 
   .site-nav--open {
-    display: block;
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  .site-nav ul {
+    align-items: center;
+    text-align: center;
+    gap: 1.4rem;
   }
 
   .site-nav a {
