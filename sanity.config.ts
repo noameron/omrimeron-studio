@@ -1,8 +1,9 @@
+'use client'
+
 /**
- * Standalone Sanity Studio config: run with `npm run studio` (sanity dev, on
- * http://localhost:3333). Not embedded in the Next.js app — Sanity v5's Studio
- * needs React 19.2+, which Next 15's bundled React doesn't provide, and a
- * standalone Studio keeps app builds fast and deploys decoupled.
+ * Sanity Studio config, mounted at /studio in the Next.js app
+ * (app/studio/[[...tool]]/page.tsx). `npm run studio` also serves it
+ * standalone on http://localhost:3333 for local editing.
  */
 
 import {visionTool} from '@sanity/vision'
@@ -15,6 +16,7 @@ import {schema} from './sanity/schemaTypes'
 import {structure} from './sanity/structure'
 
 export default defineConfig({
+  basePath: '/studio',
   projectId,
   dataset,
   // Add and edit the content schema in the './sanity/schemaTypes' folder
