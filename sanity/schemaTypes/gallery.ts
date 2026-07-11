@@ -17,13 +17,6 @@ export const gallery = defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
-      name: 'slug',
-      type: 'slug',
-      description: 'URL path of the category page (matches the site route)',
-      options: {source: 'title'},
-      validation: (rule) => rule.required(),
-    }),
-    defineField({
       name: 'images',
       title: 'Images',
       type: 'array',

@@ -27,13 +27,13 @@ describe('navigation (SC-001)', () => {
     for (const item of nav.slice(1)) {
       expect(item.href).toMatch(/^\/.+/)
     }
-    expect(nav.find((n) => n.label === 'Industry')?.href).toBe('/צילום-תעשיה-עמרי-מירון')
+    expect(nav.find((n) => n.label === 'Industry')?.href).toBe('/industry')
   })
 
   it('does not include Our Clients (FR-006)', async () => {
     const nav = await getNavigation()
     expect(nav.map((n) => n.label)).not.toContain('Our Clients')
-    expect((await getPage('our-clients'))?.inNavigation).toBe(false)
+    expect((await getPage('clients'))?.inNavigation).toBe(false)
   })
 })
 
