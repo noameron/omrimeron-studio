@@ -22,7 +22,7 @@ export const galleries: Gallery[] = [
   {
     "_type": "gallery",
     "_id": "gallery-page-246",
-    "name": "Architecture + Interior",
+    "name": "Architecture & Interior",
     "displayMode": "slider",
     "standalone": false,
     "slots": [

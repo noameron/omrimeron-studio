@@ -15,7 +15,7 @@ export const pages: Page[] = [
   {
     "_type": "page",
     "_id": "page-246",
-    "title": "Architecture + Interior",
+    "title": "Architecture & Interior",
     "slug": "architecture",
     "layout": "slider",
     "inNavigation": true,
@@ -73,7 +73,7 @@ export const pages: Page[] = [
     "slug": "about",
     "layout": "text",
     "inNavigation": true,
-    "body": "Studio Omri Meron\n\nLiving six years in New York City boosted my professional career as a photographer. I studied photography at the School of Visual Arts and worked with a number of prominent commercial photographers. This experience gave me the fundamentals to set up my own photography studio when I moved back to Tel Aviv.\n\nOver the years, I have been working with the leading Israeli advertising agencies, design studios, industrial companies and manufacturers as well as architects and interior designers. My portfolio includes product photography, architectural interiors and exteriors, food, people, cosmetics, jewelry, campaigns and catalogues and more. I have taught photography at Shenkar College of Engineering and Design as well as at the College of Painting and Sculpture in Ramat Gan."
+    "body": "Omri Meron Studio\n\nLiving six years in New York City boosted my professional career as a photographer. I studied photography at the School of Visual Arts and worked with a number of prominent commercial photographers. This experience gave me the fundamentals to set up my own photography studio when I moved back to Tel Aviv.\n\nOver the years, I have been working with the leading Israeli advertising agencies, design studios, industrial companies and manufacturers as well as architects and interior designers. My portfolio includes product photography, architectural interiors and exteriors, food, people, cosmetics, jewelry, campaigns and catalogues and more. I have taught photography at Shenkar College of Engineering and Design as well as at the College of Painting and Sculpture in Ramat Gan."
   },
   {
     "_type": "page",

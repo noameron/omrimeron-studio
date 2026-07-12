@@ -7,10 +7,8 @@ export const siteSettings: SiteSettings = {
   "title": "Omri Meron",
   "tagline": "Photographer",
   "contact": {
-    "address": "Rabenu Khanan'el St 29, Tel Aviv-Yafo",
     "phone": "972 54 2999-663",
-    "email": "meronok@gmail.com",
-    "mapEmbedUrl": "https://www.google.com/maps/embed?pb=!1m23!1m12!1m3!1d13526.404546895934!2d34.761435233207486!3d32.05298604413225!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m8!3e6!4m0!4m5!1s0x151d4ca1bc3d9acd%3A0xfe0d5221b5e4dbf9!2somrimeron!3m2!1d32.053005299999995!2d34.7701923!5e0!3m2!1sen!2sil!4v1468706016197"
+    "email": "meronok@gmail.com"
   },
   "social": [
     {
@@ -48,7 +46,7 @@ export const siteSettings: SiteSettings = {
       "pageId": "page-316"
     },
     {
-      "label": "Architecture + Interior",
+      "label": "Architecture & Interior",
       "pageId": "page-246"
     },
     {

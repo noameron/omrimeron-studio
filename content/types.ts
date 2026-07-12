@@ -2,10 +2,11 @@
 // documents carry _type and a stable _id; cross-references are by _id.
 export interface ImageSlot {
   position: number
-  sourceRef: string // wp-attachment-<id> or source logo URL; the durable link for attaching real media later
+  sourceRef: string // wp-attachment-<id>, source logo URL, or sanity asset ref; the durable link to the media
   alt: string
   width?: number // source image dimensions where known (aspect-ratio-correct placeholders)
   height?: number
+  url?: string // real image URL (Sanity CDN); when absent a placeholder renders
 }
 
 export interface NavigationItem {
@@ -23,10 +24,8 @@ export interface SiteSettings {
   title: string
   tagline: string
   contact: {
-    address: string
     phone: string
     email: string
-    mapEmbedUrl: string
   }
   social: SocialLink[]
   navigation: NavigationItem[]
