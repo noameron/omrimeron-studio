@@ -100,6 +100,44 @@ async function fetchSanitySlots(galleryId: string): Promise<ImageSlot[] | null> 
   }
 }
 
+// Home slider content (owner decision 2026-07-13): a random draw from every
+// category gallery's backoffice images, re-shuffled on each ISR regeneration.
+// The legacy Home gallery document is excluded from the pool. Null when the
+// fetch fails or the pool is empty, so the caller falls back to the local
+// Home slots. Skipped under vitest for hermeticity.
+export async function getRandomHomeSlots(count = 12): Promise<ImageSlot[] | null> {
+  if (process.env.VITEST) return null
+  try {
+    const { client } = await import('../sanity/lib/client')
+    const images = await client.fetch<SanityGalleryImage[] | null>(
+      `*[_type == "gallery" && _id != "gallery-page-228"].images[]{
+        "ref": asset._ref,
+        "alt": alt,
+        "url": asset->url,
+        "width": asset->metadata.dimensions.width,
+        "height": asset->metadata.dimensions.height
+      }`,
+    )
+    const pool = (images ?? []).filter((image) => image.url)
+    // Fisher-Yates, then keep the first `count`
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[pool[i], pool[j]] = [pool[j], pool[i]]
+    }
+    const slots = pool.slice(0, count).map((image, i) => ({
+      position: i,
+      sourceRef: image.ref,
+      alt: image.alt ?? '',
+      width: image.width ?? undefined,
+      height: image.height ?? undefined,
+      url: image.url!,
+    }))
+    return slots.length > 0 ? slots : null
+  } catch {
+    return null
+  }
+}
+
 // The About page photo, managed in the backoffice (singleton "about-page"
 // document, sanity/schemaTypes/aboutPage.ts). Null when unset, absent, or the
 // fetch fails, so the page falls back to text only. Skipped under vitest for
