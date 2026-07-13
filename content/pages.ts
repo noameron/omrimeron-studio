@@ -15,7 +15,7 @@ export const pages: Page[] = [
   {
     "_type": "page",
     "_id": "page-246",
-    "title": "Architecture + Interior",
+    "title": "Architecture & Interior",
     "slug": "architecture",
     "layout": "slider",
     "inNavigation": true,
@@ -34,7 +34,7 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-277",
     "title": "Industry",
-    "slug": "צילום-תעשיה-עמרי-מירון",
+    "slug": "industry",
     "layout": "slider",
     "inNavigation": true,
     "galleryId": "gallery-page-277"
@@ -52,7 +52,7 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-303",
     "title": "Life style",
-    "slug": "life-style",
+    "slug": "life",
     "layout": "slider",
     "inNavigation": true,
     "galleryId": "gallery-page-303"
@@ -70,10 +70,10 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-330",
     "title": "About the studio",
-    "slug": "about-the-studio",
+    "slug": "about",
     "layout": "text",
     "inNavigation": true,
-    "body": "Studio Omri Meron\n\nLiving six years in New York City boosted my professional career as a photographer. I studied photography at the School of Visual Arts and worked with a number of prominent commercial photographers. This experience gave me the fundamentals to set up my own photography studio when I moved back to Tel Aviv.\n\nOver the years, I have been working with the leading Israeli advertising agencies, design studios, industrial companies and manufacturers as well as architects and interior designers. My portfolio includes product photography, architectural interiors and exteriors, food, people, cosmetics, jewelry, campaigns and catalogues and more. I have taught photography at Shenkar College of Engineering and Design as well as at the College of Painting and Sculpture in Ramat Gan."
+    "body": "Omri Meron Studio\n\nLiving six years in New York City boosted my professional career as a photographer. I studied photography at the School of Visual Arts and worked with a number of prominent commercial photographers. This experience gave me the fundamentals to set up my own photography studio when I moved back to Tel Aviv.\n\nOver the years, I have been working with the leading Israeli advertising agencies, design studios, industrial companies and manufacturers as well as architects and interior designers. My portfolio includes product photography, architectural interiors and exteriors, food, people, cosmetics, jewelry, campaigns and catalogues and more. I have taught photography at Shenkar College of Engineering and Design as well as at the College of Painting and Sculpture in Ramat Gan."
   },
   {
     "_type": "page",
@@ -87,7 +87,7 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-355",
     "title": "Our Clients",
-    "slug": "our-clients",
+    "slug": "clients",
     "layout": "clientGrid",
     "inNavigation": false
   },
@@ -95,7 +95,7 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-415",
     "title": "Holiday Cards",
-    "slug": "holiday-cards",
+    "slug": "holiday",
     "layout": "slider",
     "inNavigation": true,
     "galleryId": "gallery-page-415"
@@ -104,7 +104,7 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-452",
     "title": "Wine & More",
-    "slug": "wine-more",
+    "slug": "wine",
     "layout": "slider",
     "inNavigation": true,
     "galleryId": "gallery-page-452"
@@ -113,7 +113,7 @@ export const pages: Page[] = [
     "_type": "page",
     "_id": "page-578",
     "title": "Products & Pack-shots",
-    "slug": "packshots",
+    "slug": "products",
     "layout": "slider",
     "inNavigation": true,
     "galleryId": "gallery-page-578"

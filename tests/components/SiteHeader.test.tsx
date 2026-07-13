@@ -7,7 +7,7 @@ import inventory from '../fixtures/source-inventory.json'
 async function renderHeader() {
   const settings = await getSiteSettings()
   const nav = await getNavigation()
-  render(<SiteHeader title={settings.title} nav={nav} social={settings.social} />)
+  render(<SiteHeader title={settings.title} nav={nav} />)
 }
 
 describe('SiteHeader', () => {
@@ -29,22 +29,6 @@ describe('SiteHeader', () => {
   it('does not link Our Clients (FR-006)', async () => {
     await renderHeader()
     expect(screen.queryByRole('link', { name: 'Our Clients' })).toBeNull()
-  })
-
-  it('renders the social links with their profile URLs', async () => {
-    await renderHeader()
-    expect(screen.getByRole('link', { name: 'Facebook' })).toHaveAttribute(
-      'href',
-      'https://www.facebook.com/Studio.Omri.Meron',
-    )
-    expect(screen.getByRole('link', { name: 'LinkedIn' })).toHaveAttribute(
-      'href',
-      'https://www.linkedin.com/in/omri-meron-7007b7a/',
-    )
-    expect(screen.getByRole('link', { name: 'Instagram' })).toHaveAttribute(
-      'href',
-      'https://www.instagram.com/omri.meron/',
-    )
   })
 
   it('mobile menu toggle opens and closes the nav', async () => {

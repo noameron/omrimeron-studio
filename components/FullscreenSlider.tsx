@@ -1,13 +1,13 @@
 'use client'
 
 import useEmblaCarousel from 'embla-carousel-react'
-import Autoplay from 'embla-carousel-autoplay'
 import { useCallback } from 'react'
 import type { ImageSlot } from '@/lib/content'
 import PlaceholderImage from './PlaceholderImage'
 
 // Fullscreen looping slider (FR-002): one slide per ImageSlot, wrap-around
-// via Embla's loop, autoplay matching the source (mega_slider_autoplay=yes).
+// via Embla's loop. No autoplay: slides advance only via the arrow controls
+// (owner decision 2026-07-12, overriding the source's autoplay setting).
 export default function FullscreenSlider({
   slots,
   galleryName,
@@ -15,7 +15,7 @@ export default function FullscreenSlider({
   slots: ImageSlot[]
   galleryName: string
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true }, [Autoplay({ delay: 5000 })])
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
 

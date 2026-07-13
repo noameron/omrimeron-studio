@@ -7,12 +7,14 @@
 }
 
 :root {
-  --sidebar-w: 280px;
-  --header-h: 60px; /* mobile top bar */
-  --ink: #333;
-  --muted: #8a8a8a;
-  --line: #e4e4e4;
-  --accent: #94af32;
+  /* header bar height; the slider subtracts this from the viewport height */
+  --bar-h: 5.5rem;
+  --header-h: var(--bar-h);
+  --ink: #171717;
+  --mid: #525252;
+  --muted: #a3a3a3;
+  --line: #e5e5e5;
+  --band: #f5f5f5;
   --placeholder-bg: #ececec;
 }
 
@@ -22,7 +24,7 @@ body {
 }
 
 body {
-  font-family: ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-family: var(--font-rubik), ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
   color: var(--ink);
   background: #fff;
   -webkit-font-smoothing: antialiased;
@@ -33,146 +35,312 @@ a {
   text-decoration: none;
 }
 
-main {
-  margin-left: var(--sidebar-w);
-  min-height: 100vh;
-  border-right: 1px solid var(--line);
-}
+/* ---- Header: sticky white bar, hairline bottom border ---- */
 
-/* ---- Sidebar (desktop) ---- */
-
-.site-sidebar {
-  position: fixed;
-  inset: 0 auto 0 0;
-  width: var(--sidebar-w);
-  padding: 2.5rem 2rem;
+/* single bar on desktop: logo on the left, menu beside it on the same row
+   (on mobile the menu moves into the drawer and the bar stands alone) */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 30;
   display: flex;
-  flex-direction: column;
-  gap: 3rem;
+  align-items: center;
   background: #fff;
-  z-index: 10;
+  border-bottom: 1px solid var(--line);
 }
 
-.site-logo {
-  display: block;
+.site-bar {
+  position: relative;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: flex-start;
+  height: var(--bar-h);
+  padding: 0 1.5rem;
 }
 
 .site-logo img {
-  width: 170px;
-  height: auto;
+  width: auto;
+  height: 48px;
 }
 
 .nav-toggle {
   display: none;
-  font-size: 1.5rem;
-  line-height: 1;
+  position: absolute;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 0;
   background: none;
   border: none;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
+  padding: 0.5rem;
+  color: var(--ink);
+}
+
+/* Desktop tabs: uppercase, letterspaced links centered in the space right
+   of the logo, wrapping at mid widths. SiteHeader publishes the resulting
+   header height as --header-h, so the slider math stays exact on wrap. */
+.site-nav {
+  flex: 1;
 }
 
 .site-nav ul {
   display: flex;
-  flex-direction: column;
-  gap: 0.9rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0 1.5rem;
   list-style: none;
 }
 
-.site-nav a {
-  font-size: 0.95rem;
-}
-
-.site-nav a:hover {
-  color: var(--accent);
-}
-
-.site-nav a[aria-current='page'] {
-  color: var(--accent);
-  text-decoration: underline;
-  text-underline-offset: 4px;
-}
-
-.site-footer {
-  margin-top: auto;
-  display: grid;
-  gap: 1.1rem;
-}
-
-.site-social {
-  display: flex;
-  gap: 1rem;
-}
-
-.site-social a {
-  color: #222;
-}
-
-.site-social a:hover {
-  color: var(--accent);
-}
-
-.site-social svg {
-  width: 20px;
-  height: 20px;
-  fill: currentColor;
-}
-
-.site-copyright {
-  font-size: 0.7rem;
+.site-nav a,
+.nav-group__trigger {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.9rem;
+  font-family: inherit;
+  font-size: 0.78rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  white-space: nowrap;
   color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+/* hairline underline that grows out from the center on hover */
+.site-nav a::after,
+.nav-group__trigger::after {
+  content: '';
+  position: absolute;
+  left: 0.9rem;
+  right: 0.9rem;
+  bottom: 0.1rem;
+  height: 1px;
+  background: var(--ink);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease-out;
+}
+
+.site-nav a:hover,
+.nav-group__trigger:hover {
+  color: var(--ink);
+}
+
+.site-nav a:hover::after,
+.nav-group__trigger:hover::after {
+  transform: scaleX(1);
+}
+
+.site-nav a[aria-current='page'],
+.nav-group__trigger--active {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.site-nav a[aria-current='page']::after,
+.nav-group__trigger--active::after {
+  transform: scaleX(1);
+}
+
+/* ---- Portfolio dropdown (desktop) ---- */
+
+.nav-group {
+  position: relative;
+}
+
+.nav-group__trigger svg {
+  transition: transform 0.25s ease-out;
+}
+
+.nav-group--open .nav-group__trigger svg {
+  transform: rotate(180deg);
+}
+
+.site-nav .nav-sub {
+  /* the generic .site-nav ul flex rule matches this nested list too */
+  display: block;
+  position: absolute;
+  top: calc(100% + 0.6rem);
+  left: 50%;
+  transform: translate(-50%, 8px);
+  z-index: 20;
+  min-width: 15rem;
+  padding: 0.6rem 0;
+  list-style: none;
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.08);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.25s ease-out,
+    transform 0.25s ease-out,
+    visibility 0.25s;
+}
+
+/* invisible bridge over the gap between trigger and panel, so the pointer
+   never "leaves" the group while travelling down into the open panel */
+.site-nav .nav-sub::before {
+  content: '';
+  position: absolute;
+  top: -0.75rem;
+  left: 0;
+  right: 0;
+  height: 0.75rem;
+}
+
+.site-nav .nav-group--open .nav-sub {
+  opacity: 1;
+  visibility: visible;
+  transform: translate(-50%, 0);
+}
+
+.site-nav .nav-sub a {
+  display: block;
+  padding: 0.55rem 1.5rem;
+  text-align: center;
+}
+
+.site-nav .nav-sub a::after {
+  display: none;
+}
+
+.site-nav .nav-sub a:hover {
+  background: var(--band);
+}
+
+.nav-backdrop,
+.nav-close {
+  display: none;
 }
 
 @media (max-width: 960px) {
-  main {
-    margin-left: 0;
-    padding-top: var(--header-h);
-    border-right: none;
+  :root {
+    --bar-h: 4rem;
   }
 
-  .site-sidebar {
-    inset: 0 0 auto 0;
-    width: auto;
-    height: var(--header-h);
-    flex-direction: row;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0 1.25rem;
-    border-bottom: 1px solid var(--line);
+  /* the bar stands alone: menu is in the drawer, not on the row */
+  .site-header {
+    display: block;
   }
 
+  /* logo keeps to the left of the bar, a notch smaller than desktop */
   .site-logo img {
-    width: 100px;
-  }
-
-  .site-footer {
-    display: none;
+    height: 30px;
   }
 
   .nav-toggle {
     display: block;
-    margin-left: auto;
+  }
+
+  /* Off-canvas drawer sliding in from the right over a dimmed backdrop */
+  .nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 40;
+    background: rgba(0, 0, 0, 0.4);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .nav-backdrop--open {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .site-nav {
-    display: none;
-    position: absolute;
-    top: var(--header-h);
-    left: 0;
+    position: fixed;
+    top: 0;
     right: 0;
+    bottom: 0;
+    z-index: 50;
+    width: min(80vw, 320px);
+    height: auto;
+    overflow-y: auto;
     background: #fff;
-    border-bottom: 1px solid var(--line);
-    padding: 1rem 1.25rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    padding: 3.5rem 1.5rem;
+    transform: translateX(100%);
+    visibility: hidden;
+    transition:
+      transform 0.3s ease-in-out,
+      visibility 0.3s;
   }
 
   .site-nav--open {
+    transform: translateX(0);
+    visibility: visible;
+  }
+
+  /* X in the drawer's top right corner */
+  .nav-close {
     display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem;
+    line-height: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--ink);
+  }
+
+  .site-nav ul {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+    width: auto;
+    height: auto;
+    padding: 0;
   }
 
   .site-nav a {
-    font-size: 1rem;
+    font-size: 0.85rem;
+  }
+
+  /* the drawer shows the full flat list: no trigger, submenu inlined */
+  .nav-group__trigger {
+    display: none;
+  }
+
+  .site-nav .nav-sub {
+    position: static;
+    transform: none;
+    opacity: 1;
+    /* follow the drawer's own visibility, so a closed drawer's links
+       stay out of the accessibility tree and tab order */
+    visibility: inherit;
+    min-width: 0;
+    padding: 0;
+    border: none;
+    box-shadow: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.1rem;
+  }
+
+  .site-nav .nav-sub::before {
+    display: none;
+  }
+
+  .site-nav .nav-sub a {
+    padding: 0.4rem 0.9rem;
+  }
+
+  .site-nav .nav-sub a:hover {
+    background: none;
   }
 }
 
@@ -180,8 +348,9 @@ main {
 
 .fullscreen-slider {
   position: relative;
-  height: 100vh;
-  background: #fafafa;
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
+  background: #fff;
 }
 
 .embla {
@@ -200,50 +369,60 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
+  padding: 2rem 3.5rem;
 }
 
+/* thin quiet chevrons instead of filled buttons */
 .slider-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 2.5rem;
+  font-size: 3rem;
+  font-weight: 300;
   line-height: 1;
   width: 3rem;
-  height: 3rem;
+  height: 3.5rem;
   border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
-  color: var(--ink);
+  background: none;
+  color: var(--muted);
   cursor: pointer;
   z-index: 5;
+  transition: color 0.3s;
+}
+
+.slider-btn:hover {
+  color: var(--ink);
 }
 
 .slider-btn--prev {
-  left: 1rem;
+  left: 0.5rem;
 }
 
 .slider-btn--next {
-  right: 1rem;
+  right: 0.5rem;
 }
 
 .slider-empty {
-  height: 100vh;
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--muted);
-  background: #fafafa;
+  background: #fff;
 }
 
-@media (max-width: 960px) {
-  .fullscreen-slider,
-  .slider-empty {
-    height: calc(100vh - var(--header-h));
-  }
+/* ---- Gallery image / placeholder ---- */
+
+.slot-image {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
 }
 
-/* ---- Placeholder image ---- */
 
 .placeholder-image {
   position: relative;
@@ -271,52 +450,93 @@ main {
   text-align: center;
 }
 
-/* ---- Prose (About) ---- */
+/* ---- Prose (About): left-aligned column, light quiet copy; the optional
+   backoffice photo sits centered above the heading ---- */
 
 .prose {
-  max-width: 46rem;
-  padding: 3.5rem 3rem;
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: 5rem 1.5rem;
+  text-align: left;
+}
+
+.prose__image {
+  display: block;
+  margin: 0 auto 2.5rem;
+  max-width: min(100%, 32rem);
+  height: auto;
 }
 
 .prose h1 {
-  font-size: 2.75rem;
-  font-weight: 400;
-  margin-bottom: 1.75rem;
+  font-size: 2rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-bottom: 2rem;
 }
 
 .prose p {
   margin-bottom: 1.25rem;
-  line-height: 1.8;
+  font-weight: 300;
+  line-height: 1.9;
+  color: var(--mid);
 }
 
 /* ---- Contact ---- */
 
 .contact-block {
-  max-width: 46rem;
-  padding: 3.5rem 3rem;
-  display: grid;
-  gap: 1rem;
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: 5rem 1.5rem;
+  display: flex;
+  justify-content: center;
 }
 
-.contact-block a {
-  text-decoration: underline;
+/* framed card: labelled hairline-separated rows */
+.contact-card {
+  width: min(100%, 26rem);
+  padding: 0.5rem 2rem;
+  border: 1px solid var(--line);
+  background: #fff;
 }
 
-.contact-block iframe {
-  width: 100%;
-  height: 360px;
-  border: 0;
-  margin-top: 1rem;
+.contact-card__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.2rem 0;
+}
+
+.contact-card__row + .contact-card__row {
+  border-top: 1px solid var(--line);
+}
+
+.contact-card dt {
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.contact-card a {
+  color: var(--ink);
+  transition: color 0.3s;
+}
+
+.contact-card a:hover {
+  color: var(--muted);
 }
 
 /* ---- Client grid ---- */
 
 .client-grid {
   max-width: 64rem;
-  padding: 3.5rem 3rem;
+  margin-inline: auto;
+  padding: 5rem 1.5rem;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1.5rem;
+  gap: 2rem 1.5rem;
   list-style: none;
 }
 
@@ -329,16 +549,118 @@ main {
   height: 100px;
 }
 
+/* gallery-plaque captions: small, letterspaced caps */
 .client-grid figcaption {
-  margin-top: 0.5rem;
-  font-size: 0.85rem;
+  margin-top: 0.75rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--mid);
+}
+
+/* ---- Footer: light grey band, everything on one lean line ---- */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  background: var(--band);
+  padding: 1.75rem 1.5rem 1.5rem;
+  color: var(--mid);
+  font-size: 0.9rem;
+}
+
+/* name, phone, email and the social group in one centered row with
+   generous gaps; wraps gracefully on narrow viewports */
+.site-footer__row {
+  max-width: 64rem;
+  margin-inline: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem 3.5rem;
+  text-align: center;
+}
+
+/* phone and email travel as one unit when the row wraps; on desktop the
+   pipe hides and the inner gap matches the row's, so nothing changes there */
+.site-footer__contact {
+  display: flex;
+  align-items: center;
+  gap: 3.5rem;
+}
+
+.site-footer__sep {
+  display: none;
+  color: var(--muted);
+}
+
+.site-footer__brand {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.site-footer__brand span {
+  font-weight: 300;
+  color: var(--mid);
+}
+
+.site-footer a:hover {
+  color: var(--ink);
+}
+
+.site-social {
+  display: flex;
+  gap: 1rem;
+}
+
+.site-social a {
+  color: var(--mid);
+  transition: color 0.3s;
+}
+
+.site-social a:hover {
+  color: var(--ink);
+}
+
+.site-social svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.site-copyright {
+  max-width: 64rem;
+  margin: 1.25rem auto 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--line);
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
 }
 
 /* ---- 404 ---- */
 
 .not-found {
-  padding: 4rem 3rem;
-  color: var(--muted);
+  max-width: 44rem;
+  margin-inline: auto;
+  padding: 5rem 1.5rem;
+  text-align: center;
+  color: var(--mid);
+}
+
+.not-found h1 {
+  font-size: 1.5rem;
+  font-weight: 300;
+  margin-bottom: 1rem;
+  color: var(--ink);
+}
+
+.not-found a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
 }
 
 @media (max-width: 960px) {
@@ -346,6 +668,21 @@ main {
   .contact-block,
   .client-grid,
   .not-found {
-    padding: 2rem 1.25rem;
+    padding: 3rem 1.25rem;
+  }
+
+  .embla__slide {
+    padding: 1.5rem;
+  }
+
+  /* phone and email pulled close together, split by a visible pipe
+     (must live in this block: it follows the base footer rules, and with
+     equal specificity the later rule wins) */
+  .site-footer__contact {
+    gap: 0.75rem;
+  }
+
+  .site-footer__sep {
+    display: inline;
   }
 }

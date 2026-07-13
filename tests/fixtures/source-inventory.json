@@ -5,7 +5,7 @@
     "Products & Pack-shots",
     "Jewlery",
     "People",
-    "Architecture + Interior",
+    "Architecture & Interior",
     "Wine & More",
     "Food",
     "Industry",
@@ -14,31 +14,31 @@
     "Contact"
   ],
   "pageSlugs": [
-    "about-the-studio",
+    "about",
     "architecture",
+    "clients",
     "contact",
     "food",
-    "holiday-cards",
+    "holiday",
     "home",
+    "industry",
     "jewlery",
-    "life-style",
-    "our-clients",
-    "packshots",
+    "life",
     "people",
-    "wine-more",
-    "צילום-תעשיה-עמרי-מירון"
+    "products",
+    "wine"
   ],
   "pageSlotCounts": {
     "home": 1,
     "architecture": 19,
     "food": 19,
-    "צילום-תעשיה-עמרי-מירון": 20,
+    "industry": 20,
     "jewlery": 16,
-    "life-style": 14,
+    "life": 14,
     "people": 24,
-    "holiday-cards": 15,
-    "wine-more": 22,
-    "packshots": 24
+    "holiday": 15,
+    "wine": 22,
+    "products": 24
   },
   "standaloneSlotCounts": {
     "discreet": 14,

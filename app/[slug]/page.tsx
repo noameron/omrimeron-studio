@@ -4,9 +4,13 @@ import ClientGrid from '@/components/ClientGrid'
 import ContactBlock from '@/components/ContactBlock'
 import FullscreenSlider from '@/components/FullscreenSlider'
 import ProseBlock from '@/components/ProseBlock'
-import { getAllPageSlugs, getClients, getGalleryForPage, getPage, getSiteSettings } from '@/lib/content'
+import { getAboutImage, getAllPageSlugs, getClients, getGalleryForPage, getPage, getSiteSettings } from '@/lib/content'
 
 type Props = { params: Promise<{ slug: string }> }
+
+// ISR: images are managed in the Sanity backoffice; re-fetch at most once a
+// minute so newly published media appears without a redeploy.
+export const revalidate = 60
 
 export async function generateStaticParams() {
   return (await getAllPageSlugs()).map((slug) => ({ slug }))
@@ -33,8 +37,12 @@ export default async function ContentPage({ params }: Props) {
       const gallery = await getGalleryForPage(page)
       return <FullscreenSlider slots={gallery?.slots ?? []} galleryName={gallery?.name ?? page.title} />
     }
-    case 'text':
-      return <ProseBlock body={page.body ?? ''} />
+    case 'text': {
+      // About (page-330) is the only text page; its backoffice-managed photo
+      // (when set) renders centered above the copy.
+      const image = page._id === 'page-330' ? await getAboutImage() : null
+      return <ProseBlock body={page.body ?? ''} image={image} />
+    }
     case 'contact': {
       const settings = await getSiteSettings()
       return <ContactBlock contact={settings.contact} />

@@ -3,91 +3,163 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import type { ResolvedNavItem, SocialLink } from '@/lib/content'
+import { useEffect, useRef, useState } from 'react'
+import type { ResolvedNavItem } from '@/lib/content'
 
-// Brand glyphs inline (24x24 simple-icons paths) so no icon binaries are needed.
-const SOCIAL_ICONS: Record<SocialLink['platform'], { label: string; path: string }> = {
-  facebook: {
-    label: 'Facebook',
-    path: 'M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z',
-  },
-  twitter: {
-    label: 'Twitter',
-    path: 'M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z',
-  },
-  linkedin: {
-    label: 'LinkedIn',
-    path: 'M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.225 0z',
-  },
-  instagram: {
-    label: 'Instagram',
-    path: 'M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z',
-  },
+// A gallery (slider) page other than home; these are grouped under one
+// "Portfolio" dropdown so the top-level menu stays small (a large flat menu
+// overwhelms scanning; grouping keeps it to a handful of items).
+function isGalleryItem(item: ResolvedNavItem) {
+  return item.layout === 'slider' && item.href !== '/'
 }
 
-// Left sidebar matching the source composition: studio logo on top
-// (owner-provided asset in public/brand/), vertical nav with green active
-// state, social links + copyright at the bottom. Collapses to a top bar with
-// a hamburger menu on small viewports.
-export default function SiteHeader({
-  title,
-  nav,
-  social,
-}: {
-  title: string
-  nav: ResolvedNavItem[]
-  social: SocialLink[]
-}) {
+// Masthead: a single bar with the logo on the left; on desktop the menu tabs
+// sit centered in the remaining row space, on mobile they move to the drawer.
+// The nine gallery categories live in a Portfolio dropdown (hover, click and
+// keyboard operable). On small viewports the tabs move into a drawer sliding
+// in from the right, where the dropdown flattens into the full list.
+export default function SiteHeader({ title, nav }: { title: string; nav: ResolvedNavItem[] }) {
   const [open, setOpen] = useState(false)
+  const [portfolioOpen, setPortfolioOpen] = useState(false)
+  const headerRef = useRef<HTMLElement>(null)
+  const groupRef = useRef<HTMLLIElement>(null)
   const pathname = usePathname()
   const current = pathname ? decodeURIComponent(pathname) : ''
+
+  const galleryItems = nav.filter(isGalleryItem)
+  const firstGalleryHref = galleryItems[0]?.href
+  const portfolioActive = galleryItems.some((item) => item.href === current)
+
+  // The menu tabs wrap at mid widths, so the header height isn't a constant.
+  // Publish the measured height as --header-h so the fullscreen slider can
+  // subtract it from the viewport exactly (globals.css ships a close static
+  // fallback for first paint).
+  useEffect(() => {
+    const header = headerRef.current
+    if (!header) return
+    const observer = new ResizeObserver(() => {
+      document.documentElement.style.setProperty('--header-h', `${header.offsetHeight}px`)
+    })
+    observer.observe(header)
+    return () => {
+      observer.disconnect()
+      document.documentElement.style.removeProperty('--header-h')
+    }
+  }, [])
+
+  // Lock background scroll while the drawer is open
+  useEffect(() => {
+    document.body.style.overflow = open ? 'hidden' : ''
+    return () => {
+      document.body.style.overflow = ''
+    }
+  }, [open])
+
+  // Close the dropdown on Escape or on any press outside it
+  useEffect(() => {
+    if (!portfolioOpen) return
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setPortfolioOpen(false)
+    }
+    const onPress = (e: PointerEvent) => {
+      if (!groupRef.current?.contains(e.target as Node)) setPortfolioOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    window.addEventListener('pointerdown', onPress)
+    return () => {
+      window.removeEventListener('keydown', onKey)
+      window.removeEventListener('pointerdown', onPress)
+    }
+  }, [portfolioOpen])
+
+  const closeAll = () => {
+    setOpen(false)
+    setPortfolioOpen(false)
+  }
+
+  const navLink = (item: ResolvedNavItem) => (
+    <Link
+      href={item.href}
+      aria-current={current === item.href ? 'page' : undefined}
+      onClick={closeAll}
+    >
+      {item.label}
+    </Link>
+  )
+
   return (
-    <header className="site-sidebar">
-      <Link href="/" className="site-logo">
-        <Image src="/brand/logo.jpg" alt={title} width={181} height={82} priority />
-      </Link>
-      <button
-        type="button"
-        className="nav-toggle"
-        aria-expanded={open}
-        aria-label="Toggle navigation"
-        onClick={() => setOpen((o) => !o)}
-      >
-        <span aria-hidden="true">☰</span>
-      </button>
+    <header className="site-header" ref={headerRef}>
+      <div className="site-bar">
+        <Link href="/" className="site-logo" onClick={closeAll}>
+          <Image src="/brand/logo.jpg" alt={title} width={181} height={82} priority />
+        </Link>
+        <button
+          type="button"
+          className="nav-toggle"
+          aria-expanded={open}
+          aria-label="Toggle navigation"
+          onClick={() => setOpen((o) => !o)}
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+        </button>
+      </div>
+      <div
+        aria-hidden={!open}
+        className={open ? 'nav-backdrop nav-backdrop--open' : 'nav-backdrop'}
+        onClick={() => setOpen(false)}
+      />
       <nav className={open ? 'site-nav site-nav--open' : 'site-nav'} aria-label="Main">
+        <button
+          type="button"
+          className="nav-close"
+          aria-label="Close navigation"
+          onClick={() => setOpen(false)}
+        >
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+            <path d="M6 6l12 12M18 6L6 18" />
+          </svg>
+        </button>
         <ul>
-          {nav.map((item) => (
-            <li key={item.href}>
-              <Link
-                href={item.href}
-                aria-current={current === item.href ? 'page' : undefined}
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </nav>
-      <div className="site-footer">
-        <div className="site-social">
-          {social.map((link) => {
-            const icon = SOCIAL_ICONS[link.platform]
+          {nav.map((item) => {
+            if (!isGalleryItem(item)) return <li key={item.href}>{navLink(item)}</li>
+            // the whole gallery run renders once, as the dropdown, in the
+            // slot of its first item — DOM link order stays the source order
+            if (item.href !== firstGalleryHref) return null
             return (
-              <a key={link.platform} href={link.url} target="_blank" rel="noopener noreferrer" aria-label={icon.label}>
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path d={icon.path} />
-                </svg>
-              </a>
+              <li
+                key="portfolio"
+                ref={groupRef}
+                className={portfolioOpen ? 'nav-group nav-group--open' : 'nav-group'}
+                onMouseEnter={() => setPortfolioOpen(true)}
+                onMouseLeave={() => setPortfolioOpen(false)}
+              >
+                <button
+                  type="button"
+                  className={portfolioActive ? 'nav-group__trigger nav-group__trigger--active' : 'nav-group__trigger'}
+                  aria-expanded={portfolioOpen}
+                  aria-haspopup="true"
+                  // open only: hover already opened it for mouse users, so a
+                  // toggle would immediately close what the hover opened.
+                  // Closing is Escape, outside press, mouseleave, or a link.
+                  onClick={() => setPortfolioOpen(true)}
+                >
+                  Portfolio
+                  <svg viewBox="0 0 10 6" width="9" height="6" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round">
+                    <path d="M1 1l4 4 4-4" />
+                  </svg>
+                </button>
+                <ul className="nav-sub">
+                  {galleryItems.map((gallery) => (
+                    <li key={gallery.href}>{navLink(gallery)}</li>
+                  ))}
+                </ul>
+              </li>
             )
           })}
-        </div>
-        <p className="site-copyright">
-          © {title} - {new Date().getFullYear()}
-        </p>
-      </div>
+        </ul>
+      </nav>
     </header>
   )
 }

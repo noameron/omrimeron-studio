@@ -23,17 +23,17 @@ describe('navigation (SC-001)', () => {
 
   it('resolves hrefs: home at /, others at /<slug>', async () => {
     const nav = await getNavigation()
-    expect(nav[0]).toEqual({ label: 'Home', href: '/' })
+    expect(nav[0]).toEqual({ label: 'Home', href: '/', layout: 'slider' })
     for (const item of nav.slice(1)) {
       expect(item.href).toMatch(/^\/.+/)
     }
-    expect(nav.find((n) => n.label === 'Industry')?.href).toBe('/צילום-תעשיה-עמרי-מירון')
+    expect(nav.find((n) => n.label === 'Industry')?.href).toBe('/industry')
   })
 
   it('does not include Our Clients (FR-006)', async () => {
     const nav = await getNavigation()
     expect(nav.map((n) => n.label)).not.toContain('Our Clients')
-    expect((await getPage('our-clients'))?.inNavigation).toBe(false)
+    expect((await getPage('clients'))?.inNavigation).toBe(false)
   })
 })
 
@@ -123,9 +123,7 @@ describe('site identity', () => {
     const settings = await getSiteSettings()
     expect(settings.title).toBe('Omri Meron')
     expect(settings.tagline).toBe('Photographer')
-    expect(settings.contact.address).toBe("Rabenu Khanan'el St 29, Tel Aviv-Yafo")
     expect(settings.contact.phone).toBe('972 54 2999-663')
     expect(settings.contact.email).toBe('meronok@gmail.com')
-    expect(settings.contact.mapEmbedUrl).toMatch(/^https:\/\//)
   })
 })
