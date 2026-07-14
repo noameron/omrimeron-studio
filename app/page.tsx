@@ -15,6 +15,10 @@ export default async function HomePage() {
   const randomSlots = await getRandomHomeSlots()
   const fallback = randomSlots ? null : await getGalleryForPage(page)
   return (
-    <FullscreenSlider slots={randomSlots ?? fallback?.slots ?? []} galleryName={page.title} />
+    <FullscreenSlider
+      slots={randomSlots ?? fallback?.slots ?? []}
+      galleryName={page.title}
+      autoAdvanceMs={4000}
+    />
   )
 }
