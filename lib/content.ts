@@ -102,15 +102,16 @@ async function fetchSanitySlots(galleryId: string): Promise<ImageSlot[] | null> 
 
 // Home slider content (owner decision 2026-07-13): a random draw from every
 // category gallery's backoffice images, re-shuffled on each ISR regeneration.
-// The legacy Home gallery document is excluded from the pool. Null when the
-// fetch fails or the pool is empty, so the caller falls back to the local
-// Home slots. Skipped under vitest for hermeticity.
+// Excluded from the pool: the legacy Home gallery, and Holiday Cards
+// (gallery-page-415, owner decision 2026-07-14). Null when the fetch fails
+// or the pool is empty, so the caller falls back to the local Home slots.
+// Skipped under vitest for hermeticity.
 export async function getRandomHomeSlots(count = 12): Promise<ImageSlot[] | null> {
   if (process.env.VITEST) return null
   try {
     const { client } = await import('../sanity/lib/client')
     const images = await client.fetch<SanityGalleryImage[] | null>(
-      `*[_type == "gallery" && _id != "gallery-page-228"].images[]{
+      `*[_type == "gallery" && !(_id in ["gallery-page-228", "gallery-page-415"])].images[]{
         "ref": asset._ref,
         "alt": alt,
         "url": asset->url,

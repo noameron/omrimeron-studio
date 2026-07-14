@@ -1,23 +1,49 @@
 'use client'
 
 import useEmblaCarousel from 'embla-carousel-react'
-import { useCallback } from 'react'
+import { useCallback, useEffect, useRef } from 'react'
 import type { ImageSlot } from '@/lib/content'
 import PlaceholderImage from './PlaceholderImage'
 
 // Fullscreen looping slider (FR-002): one slide per ImageSlot, wrap-around
-// via Embla's loop. No autoplay: slides advance only via the arrow controls
-// (owner decision 2026-07-12, overriding the source's autoplay setting).
+// via Embla's loop. Auto-advance is opt-in per page via autoAdvanceMs
+// (owner decision 2026-07-14: home page advances every 4s, galleries stay
+// manual). A manual arrow click restarts the countdown from zero.
 export default function FullscreenSlider({
   slots,
   galleryName,
+  autoAdvanceMs,
 }: {
   slots: ImageSlot[]
   galleryName: string
+  autoAdvanceMs?: number
 }) {
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true })
-  const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi])
-  const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi])
+  // duration is Embla's animation attack (frames-based, not ms); 40 gives a
+  // noticeably softer glide than the default 25.
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true, duration: 40 })
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const restartTimer = useCallback(() => {
+    if (timerRef.current) clearInterval(timerRef.current)
+    if (!autoAdvanceMs || !emblaApi || slots.length <= 1) return
+    timerRef.current = setInterval(() => emblaApi.scrollNext(), autoAdvanceMs)
+  }, [autoAdvanceMs, emblaApi, slots.length])
+
+  useEffect(() => {
+    restartTimer()
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current)
+    }
+  }, [restartTimer])
+
+  const scrollPrev = useCallback(() => {
+    emblaApi?.scrollPrev()
+    restartTimer()
+  }, [emblaApi, restartTimer])
+  const scrollNext = useCallback(() => {
+    emblaApi?.scrollNext()
+    restartTimer()
+  }, [emblaApi, restartTimer])
 
   if (slots.length === 0) {
     // Spec edge case: empty gallery renders an empty state, never a broken slider.
