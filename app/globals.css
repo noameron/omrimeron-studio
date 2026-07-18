@@ -35,6 +35,76 @@ a {
   text-decoration: none;
 }
 
+/* ---- Intro overlay: centered logo on white, then a fly-to-header move
+   (durations match HOLD_MS/FLY_MS/SKIP_FADE_MS in IntroOverlay.tsx) ---- */
+
+.intro-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 70;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 1.5rem;
+  opacity: 1;
+  transition-property: opacity;
+}
+
+.intro-overlay--skip {
+  opacity: 0;
+}
+
+/* fades separately so the site is revealed while the logo is mid-flight */
+.intro-overlay__backdrop {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  transition: opacity 0.7s;
+}
+
+.intro-overlay__backdrop--fade {
+  opacity: 0;
+  transition-delay: 0.2s;
+}
+
+.intro-overlay__group {
+  position: relative;
+}
+
+.intro-overlay__logo {
+  display: block;
+  width: auto;
+  height: 7rem;
+}
+
+@keyframes intro-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+.intro-fade-in {
+  animation: intro-fade-in 600ms ease-out both;
+}
+
+@keyframes intro-twist {
+  to {
+    transform: rotateY(360deg);
+  }
+}
+
+.intro-twist {
+  animation: intro-twist 900ms cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+/* data-intro-seen is flagged on <html> by the layout's pre-hydration script
+   (full page loads) and by IntroOverlay once the intro plays, so repeat
+   views never flash the overlay while React boots */
+html[data-intro-seen] #intro-overlay {
+  display: none;
+}
+
 /* ---- Header: sticky white bar, hairline bottom border ---- */
 
 /* single bar on desktop: logo on the left, menu beside it on the same row
@@ -467,7 +537,7 @@ a {
   height: auto;
 }
 
-.prose h1 {
+.prose h2 {
   font-size: 2rem;
   font-weight: 300;
   letter-spacing: 0.02em;
@@ -481,51 +551,302 @@ a {
   color: var(--mid);
 }
 
-/* ---- Contact ---- */
+/* ---- Page title: the tab name on top of every non-home page ---- */
+
+.page-title {
+  padding: 2.75rem 1.5rem 0;
+  text-align: center;
+  font-size: 1.35rem;
+  font-weight: 300;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+
+/* ---- Contact: details column beside a mailto form (meron4art construct) ---- */
 
 .contact-block {
-  max-width: 44rem;
+  max-width: 48rem;
   margin-inline: auto;
-  padding: 5rem 1.5rem;
+  padding: 3.5rem 1.5rem 5rem;
   display: flex;
   justify-content: center;
+  gap: 2.5rem 4rem;
 }
 
-/* framed card: labelled hairline-separated rows */
-.contact-card {
-  width: min(100%, 26rem);
-  padding: 0.5rem 2rem;
-  border: 1px solid var(--line);
-  background: #fff;
-}
-
-.contact-card__row {
+.contact-details {
   display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.2rem 0;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.contact-card__row + .contact-card__row {
-  border-top: 1px solid var(--line);
-}
-
-.contact-card dt {
-  font-size: 0.72rem;
-  font-weight: 500;
+.contact-details h2 {
+  font-size: 0.78rem;
+  font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.contact-card a {
+.contact-details__name {
+  font-size: 1.05rem;
+  font-weight: 700;
   color: var(--ink);
+}
+
+.contact-details a {
+  color: var(--mid);
   transition: color 0.3s;
 }
 
-.contact-card a:hover {
+.contact-details a:hover {
+  color: var(--ink);
+}
+
+.contact-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 24rem;
+}
+
+.contact-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  color: var(--mid);
+}
+
+.contact-form input,
+.contact-form textarea {
+  border: 1px solid var(--line);
+  background: var(--band);
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--ink);
+  outline: none;
+  resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: var(--muted);
+}
+
+.contact-form button {
+  align-self: center;
+  border: 1px solid var(--ink);
+  background: none;
+  padding: 0.5rem 1.5rem;
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--ink);
+  cursor: pointer;
+  transition:
+    background 0.3s,
+    color 0.3s;
+}
+
+.contact-form button:hover {
+  background: var(--ink);
+  color: #fff;
+}
+
+/* ---- Category gallery: paged thumbnail grid + lightbox ---- */
+
+.gallery-page {
+  max-width: 80rem;
+  margin-inline: auto;
+  padding: 2rem 1.5rem 4rem;
+}
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  /* keep the sticky header clear of the grid top when pagination scrolls here */
+  scroll-margin-top: calc(var(--header-h) + 1rem);
+}
+
+.gallery-grid__item {
+  display: block;
+  padding: 0;
+  border: none;
+  background: none;
+  cursor: zoom-in;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.gallery-grid__thumb {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease-out;
+}
+
+.gallery-grid__item:hover .gallery-grid__thumb {
+  transform: scale(1.03);
+}
+
+/* a slot without media yet fills its grid cell with the placeholder */
+.gallery-grid__item .placeholder-image {
+  width: 100%;
+  height: 100%;
+}
+
+.gallery-pagination {
+  margin-top: 2.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.gallery-pagination button {
+  padding: 0.25rem;
+  line-height: 0;
+  border: none;
+  background: none;
+  color: var(--mid);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.gallery-pagination button:hover {
+  color: var(--ink);
+}
+
+.gallery-pagination button:disabled {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+.gallery-pagination__status {
+  font-size: 0.875rem;
   color: var(--muted);
+}
+
+.gallery-empty {
+  padding: 5rem 1.5rem;
+  text-align: center;
+  color: var(--muted);
+}
+
+/* fullscreen black overlay: toolbar top-right, counter top-left, arrows on
+   the sides, image centered on the stage between them */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+  padding: 1rem;
+}
+
+.lightbox__counter {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.8);
+  pointer-events: none;
+}
+
+.lightbox__toolbar {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.lightbox__toolbar button {
+  padding: 0;
+  line-height: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.lightbox__toolbar button:hover {
+  color: #fff;
+}
+
+.lightbox__nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  padding: 0.5rem;
+  line-height: 0;
+  border: none;
+  background: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.lightbox__nav:hover {
+  color: #fff;
+}
+
+.lightbox__nav--prev {
+  left: 0.5rem;
+}
+
+.lightbox__nav--next {
+  right: 0.5rem;
+}
+
+.lightbox__stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  min-height: 0;
+  touch-action: pan-y;
+}
+
+.lightbox__stage--zoomed {
+  overflow: hidden;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+}
+
+.lightbox__stage--zoomed:active {
+  cursor: grabbing;
+}
+
+.lightbox__img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  cursor: zoom-in;
+}
+
+.lightbox__img--zoomed {
+  max-width: none;
+  max-height: none;
+  width: auto;
+  cursor: inherit;
+  will-change: transform;
 }
 
 /* ---- Client grid ---- */
@@ -665,10 +986,43 @@ a {
 
 @media (max-width: 960px) {
   .prose,
-  .contact-block,
   .client-grid,
   .not-found {
     padding: 3rem 1.25rem;
+  }
+
+  .page-title {
+    padding-top: 2rem;
+    font-size: 1.15rem;
+  }
+
+  .intro-overlay__logo {
+    height: 5rem;
+  }
+
+  /* details stack above the form on narrow viewports */
+  .contact-block {
+    flex-direction: column;
+    align-items: center;
+    padding: 2.5rem 1.25rem 3.5rem;
+  }
+
+  .contact-details {
+    align-items: center;
+    text-align: center;
+  }
+
+  .contact-form {
+    width: 100%;
+  }
+
+  .gallery-page {
+    padding: 1.5rem 1.25rem 3rem;
+  }
+
+  .gallery-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 0.75rem;
   }
 
   .embla__slide {

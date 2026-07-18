@@ -90,7 +90,9 @@ export default function SiteHeader({ title, nav }: { title: string; nav: Resolve
   return (
     <header className="site-header" ref={headerRef}>
       <div className="site-bar">
-        <Link href="/" className="site-logo" onClick={closeAll}>
+        {/* data-intro-brand: the landing target the intro overlay's logo
+            flies onto (components/IntroOverlay.tsx) */}
+        <Link href="/" className="site-logo" data-intro-brand onClick={closeAll}>
           <Image src="/brand/logo.jpg" alt={title} width={181} height={82} priority />
         </Link>
         <button

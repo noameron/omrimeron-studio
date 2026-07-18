@@ -1,7 +1,8 @@
 import type { ImageSlot } from '@/lib/content'
 
-// Renders a Page.body plain-text string: first paragraph as the page heading
-// (source shows the studio name as an h1), the rest as paragraphs (FR-004).
+// Renders a Page.body plain-text string: first paragraph as the body heading
+// (an h2: since 2026-07-18 the route renders the tab name as the page h1),
+// the rest as paragraphs (FR-004).
 // An optional backoffice-managed image renders centered above the heading.
 // dir="ltr" pins the English copy left-to-right regardless of any inherited
 // direction. Bodies become portable text when the CMS lands.
@@ -19,7 +20,7 @@ export default function ProseBlock({ body, image }: { body: string; image?: Imag
           height={image.height}
         />
       )}
-      <h1>{heading}</h1>
+      <h2>{heading}</h2>
       {paragraphs.map((paragraph, i) => (
         <p key={i}>{paragraph}</p>
       ))}

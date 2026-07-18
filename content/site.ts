@@ -30,10 +30,6 @@ export const siteSettings: SiteSettings = {
       "pageId": "page-228"
     },
     {
-      "label": "About the studio",
-      "pageId": "page-330"
-    },
-    {
       "label": "Products & Pack-shots",
       "pageId": "page-578"
     },
@@ -68,6 +64,10 @@ export const siteSettings: SiteSettings = {
     {
       "label": "Holiday Cards",
       "pageId": "page-415"
+    },
+    {
+      "label": "About the studio",
+      "pageId": "page-330"
     },
     {
       "label": "Contact",
