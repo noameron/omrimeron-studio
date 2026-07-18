@@ -414,6 +414,31 @@ html[data-intro-seen] #intro-overlay {
   }
 }
 
+/* ---- Home page video ---- */
+
+/* same white frame as the gallery slides (.embla__slide) so the video sits
+   inset on the page instead of bleeding edge to edge */
+.home-video {
+  height: calc(100vh - var(--header-h));
+  height: calc(100dvh - var(--header-h));
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 3.5rem;
+}
+
+.home-video video {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  /* never let flex sizing squash the frame; letterbox instead */
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
 /* ---- Fullscreen slider ---- */
 
 .fullscreen-slider {
@@ -1026,6 +1051,10 @@ html[data-intro-seen] #intro-overlay {
   }
 
   .embla__slide {
+    padding: 1.5rem;
+  }
+
+  .home-video {
     padding: 1.5rem;
   }
 

@@ -145,7 +145,7 @@ export default function IntroOverlay() {
         }}
       >
         <div className={phase === 'hold' ? 'intro-fade-in' : phase === 'fly' ? 'intro-twist' : undefined}>
-          <Image src="/brand/logo.jpg" alt="" width={362} height={164} priority className="intro-overlay__logo" />
+          <Image src="/brand/logo_1.jpg" alt="" width={362} height={164} priority className="intro-overlay__logo" />
         </div>
       </div>
     </div>
