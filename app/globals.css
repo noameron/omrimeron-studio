@@ -9,6 +9,9 @@
 :root {
   /* header bar height; the slider subtracts this from the viewport height */
   --bar-h: 5.5rem;
+  /* one size for the menu text and the logo, so the logo never reads
+     bigger than the tabs sitting next to it on the same row */
+  --nav-fs: 0.78rem;
   --header-h: var(--bar-h);
   --ink: #171717;
   --mid: #525252;
@@ -129,9 +132,23 @@ html[data-intro-seen] #intro-overlay {
   padding: 0 1.5rem;
 }
 
+/* flex kills the inline-baseline descender gap under the img, so the logo
+   centers on the exact same vertical band as the menu text */
+.site-logo {
+  display: flex;
+}
+
 .site-logo img {
   width: auto;
-  height: 48px;
+  /* match the menu tabs' full height exactly: text line box (font-size x
+     Rubik's normal line-height, 14.5px at 12.48px) plus the tabs' 0.4rem
+     vertical padding, so logo and tabs read as one equal-height row */
+  height: calc(var(--nav-fs) * 1.162 + 0.8rem);
+  /* rest the logo's bottom edge on the menu text's baseline: from the
+     row-centered position, drop the bottom to center (-50% of own height)
+     plus the baseline's offset below the line-box center (Rubik ascent
+     11.5px in a 14.5px line box puts the baseline 4.25px below center) */
+  transform: translateY(calc(-50% + 4.25px));
 }
 
 .nav-toggle {
@@ -173,7 +190,7 @@ html[data-intro-seen] #intro-overlay {
   gap: 0.35rem;
   padding: 0.4rem 0.9rem;
   font-family: inherit;
-  font-size: 0.78rem;
+  font-size: var(--nav-fs);
   letter-spacing: 0.08em;
   text-transform: uppercase;
   white-space: nowrap;
@@ -302,9 +319,11 @@ html[data-intro-seen] #intro-overlay {
     display: block;
   }
 
-  /* logo keeps to the left of the bar, a notch smaller than desktop */
+  /* logo keeps to the left of the bar; no menu text on the row here, so
+     drop the desktop baseline shift and center it in the bar again */
   .site-logo img {
     height: 30px;
+    transform: none;
   }
 
   .nav-toggle {

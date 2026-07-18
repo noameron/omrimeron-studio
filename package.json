@@ -20,6 +20,15 @@
     "sanity": "^5.31.1",
     "styled-components": "^6.4.3"
   },
+  "overrides": {
+    "adm-zip": "^0.6.0",
+    "js-yaml": "^4.1.0",
+    "postcss": "^8.5.19",
+    "@sanity/uuid": "^3.0.3",
+    "typeid-js": {
+      "uuid": "^11.1.1"
+    }
+  },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
