@@ -16,7 +16,9 @@ import { galleries } from '@/content/galleries'
 import { pages } from '@/content/pages'
 
 describe('navigation (SC-001)', () => {
-  it('has exactly the 12 source tab labels in source order', async () => {
+  // menu order diverges from the WP source since 2026-07-18: About moved to
+  // last before Contact (owner request); the fixture records the menu order
+  it('has exactly the 12 source tab labels in menu order', async () => {
     const nav = await getNavigation()
     expect(nav.map((n) => n.label)).toEqual(inventory.navLabels)
   })

@@ -17,7 +17,7 @@ describe('SiteHeader', () => {
     expect(logo).toHaveAttribute('href', '/')
   })
 
-  it('renders all 12 tab labels in source order (SC-001)', async () => {
+  it('renders all 12 tab labels in menu order (SC-001)', async () => {
     await renderHeader()
     const nav = screen.getByRole('navigation', { name: 'Main' })
     const labels = within(nav)
