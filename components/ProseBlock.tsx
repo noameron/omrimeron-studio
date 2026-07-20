@@ -21,6 +21,12 @@ export default function ProseBlock({ body, image }: { body: string; image?: Imag
         />
       )}
       <h2>{heading}</h2>
+      <p className="prose__link-line">
+        Also in{' '}
+        <a href="https://www.meron4art.co.il" target="_blank" rel="noopener noreferrer">
+          meron4art
+        </a>
+      </p>
       {paragraphs.map((paragraph, i) => (
         <p key={i}>{paragraph}</p>
       ))}

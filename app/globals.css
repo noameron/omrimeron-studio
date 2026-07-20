@@ -595,6 +595,21 @@ html[data-intro-seen] #intro-overlay {
   color: var(--mid);
 }
 
+/* Link line under the About heading; only "meron4art" is bold and underlines on hover */
+.prose__link-line {
+  margin-top: -1.25rem;
+}
+
+.prose__link-line a {
+  font-weight: 700;
+  color: inherit;
+  text-decoration: none;
+}
+
+.prose__link-line a:hover {
+  text-decoration: underline;
+}
+
 /* ---- Page title: the tab name on top of every non-home page ---- */
 
 .page-title {
