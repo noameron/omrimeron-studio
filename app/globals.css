@@ -1088,7 +1088,12 @@ html[data-intro-seen] #intro-overlay {
     padding: 1.5rem;
   }
 
+  /* on tall narrow viewports, filling the remaining viewport height
+     letterboxes hard around a square video, reading as a wide dead gap
+     between the header and footer; cap it to a content-proportioned band
+     instead, matching the meron4art hero's mobile height (45vh) */
   .home-video {
+    height: 45vh;
     padding: 1.5rem;
   }
 
